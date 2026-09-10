@@ -18,7 +18,7 @@ pipeline {
                 secret:
                   secretName: regcred
                   items:
-                  - key: .configjson
+                  - key: config.json
                     path: config.json
             '''
         }
