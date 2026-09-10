@@ -18,7 +18,7 @@ pipeline {
                 secret:
                   secretName: regcred
                   items:
-                  - key: .dockerconfigjson
+                  - key: config.json
                     path: config.json
             '''
         }
