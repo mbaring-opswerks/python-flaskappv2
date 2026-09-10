@@ -19,7 +19,7 @@ EOF
                         /kaniko/executor \
                           --context=/workspace \
                           --dockerfile=/workspace/Dockerfile \
-                          --destination=jrayco/flask-app:v1-mweh
+                          --destination=raycojp/flask-app:v1-mweh
                     '''
                 }
             }
