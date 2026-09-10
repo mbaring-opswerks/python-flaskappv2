@@ -12,7 +12,7 @@ pipeline {
                         /kaniko/executor \
                           --context="${WORKSPACE}" \
                           --dockerfile="${WORKSPACE}/Dockerfile" \
-                          --destination=raycoJp/flask-app:v1-hehehe
+                          --destination=raycojp/flask-app:v1-hehehe
                     '''
                 }
             }
