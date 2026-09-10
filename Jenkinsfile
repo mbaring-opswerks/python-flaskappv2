@@ -7,12 +7,7 @@ pipeline {
  
     stages {
  
-        stage('Checkout') {
-            steps {
-                git 'https://github.com/mbaring-opswerks/python-flaskapp.git'
-            }
-        }
- 
+
         stage('Build and Push') {
             steps {
                 sh '''
