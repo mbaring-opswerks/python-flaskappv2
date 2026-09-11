@@ -1,28 +1,44 @@
 pipeline {
-  agent {
-    node {
-      label 'kaniko-agent'
-    }
-  }
-
-
-
-  stages {
-    stage('Smoke Test') {
-      steps {
-        container('kaniko') {
-          sh '''
-            mkdir -p /workspace
-            cat <<'EOF' > /workspace/Dockerfile
-FROM alpine
-CMD ["echo", "hello"]
-EOF
-            /kaniko/executor --context=/workspace \
-              --dockerfile=/workspace/Dockerfile \
-              --destination=raycojp/flaskapp:smoke-test
-          '''
-        }
-      }
-    }
-  }
+    agent {
+        kubernetes {
+            yaml '''
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+  - name: kaniko
+    image: gcr.io/kaniko-project/executor:debug
+    command:
+    - /busybox/sleep
+    args:
+    - 99d
+    volumeMounts:
+    - name: docker-config
+      mountPath: /kaniko/.docker
+ 
+  volumes:
+  - name: docker-config
+    secret:
+      secretName: regcred
+      items:
+      - key: .dockerconfigjson
+        path: config.json
+'''
+        }
+    }
+ 
+    stages {
+       stage('Smoke Test') {
+            steps {
+                container('kaniko') {
+                    sh '''
+                        /kaniko/executor \
+                          --context="${WORKSPACE}" \
+                          --dockerfile="${WORKSPACE}/Dockerfile" \
+                          --destination=raycojp/flask-app:smoke-test
+                    '''
+                }
+            }
+        }
+    }
 }
