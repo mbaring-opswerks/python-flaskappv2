@@ -111,7 +111,8 @@ EOF
 
                             cd deployment-config
 
-                            sed -i "s|image: raycoJp/flask-app:.*|image: raycoJp/flask-app:${IMAGE_TAG}|" \
+                            sed -i -E \
+                                "s|^([[:space:]]*-[[:space:]]*image:[[:space:]]*).*flask-app:[^[:space:]]*|\1${DOCKER_IMAGE}:${IMAGE_TAG}|" \
                                 "${DEPLOYMENT_FILE}"
 
                             git config user.name "Jenkins"
