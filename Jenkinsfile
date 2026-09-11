@@ -42,7 +42,7 @@ spec:
 
         DEPLOYMENT_REPO = 'https://github.com/raycoJp/deployment-config.git'
 
-        DEPLOYMENT_FILE = 'app/flask-app/deployment.yaml'
+        DEPLOYMENT_FILE = 'apps/flask-app/deployment.yaml'
     }
 
     stages {
