@@ -40,7 +40,7 @@ spec:
     environment {
         DOCKER_IMAGE = 'raycojp/flask-app'
 
-        DEPLOYMENT_REPO = 'https://github.com/raycoJp/deployment-config.git'
+        DEPLOYMENT_REPO = 'github.com/raycoJp/deployment-config.git'
 
         DEPLOYMENT_FILE = 'apps/flask-app/deployment.yaml'
     }
@@ -107,7 +107,7 @@ EOF
                             export GIT_ASKPASS=/tmp/git-askpass.sh
                             export GIT_TERMINAL_PROMPT=0
 
-                            git clone "${DEPLOYMENT_REPO}" deployment-config
+                            git clone https://${GIT_USER}:${GIT_PASS}@github.com/raycoJp/deployment-config.git deployment-config
 
                             cd deployment-config
 
