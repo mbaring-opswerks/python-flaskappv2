@@ -3,6 +3,8 @@ pipeline {
         kubernetes {
             yaml '''
 apiVersion: v1
+metadata:
+  namespace: devops-tools
 kind: Pod
 spec:
   containers:
