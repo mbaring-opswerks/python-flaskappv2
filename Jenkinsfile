@@ -111,15 +111,20 @@ EOF
 
                             cd deployment-config
 
-                            sed -i -E \
-                                "s|^([[:space:]]*-[[:space:]]*image:[[:space:]]*).*flask-app:[^[:space:]]*|\1${DOCKER_IMAGE}:${IMAGE_TAG}|" \
-                                "${DEPLOYMENT_FILE}"
+                            # Targets '- image: raycojp/flask-app:<TAG>' while preserving indentations
+                            sed -i "s|- image: ${DOCKER_IMAGE}:.*|- image: ${DOCKER_IMAGE}:${IMAGE_TAG}|" "${DEPLOYMENT_FILE}"
 
                             git config user.name "Jenkins"
                             git config user.email "jenkins@localhost"
 
                             echo "Updated deployment configuration:"
                             git diff -- "${DEPLOYMENT_FILE}"
+
+                            # Safety check: fail if sed failed to update the file
+                            if [ -z "$(git status --porcelain)" ]; then
+                                echo "ERROR: No changes detected in ${DEPLOYMENT_FILE}. Check image string match."
+                                exit 1
+                            fi
 
                             git add "${DEPLOYMENT_FILE}"
 
