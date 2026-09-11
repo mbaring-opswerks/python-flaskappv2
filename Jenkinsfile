@@ -107,7 +107,7 @@ EOF
                             export GIT_ASKPASS=/tmp/git-askpass.sh
                             export GIT_TERMINAL_PROMPT=0
 
-                            git clone https://github.com/mbaring-opswerks/deployment-configv2.git deployment-configv2
+                            git clone https://${GIT_USERNAME}:${GIT_PASSWORD}@://github.com deployment-configv2
 
                             cd deployment-configv2
 
