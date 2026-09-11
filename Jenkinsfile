@@ -35,12 +35,6 @@ spec:
 
     stages {
 
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-
         stage('Get Commit Hash') {
             steps {
                 script {
@@ -49,7 +43,9 @@ spec:
                         returnStdout: true
                     ).trim()
 
-                    env.COMMIT_5 = env.COMMIT_SHA.takeRight(5)
+                    env.COMMIT_5 = env.COMMIT_SHA.substring(
+                        env.COMMIT_SHA.length() - 5
+                    )
 
                     env.IMAGE_TAG = "${BUILD_NUMBER}-${env.COMMIT_5}"
 
@@ -83,5 +79,3 @@ spec:
         }
     }
 }
-
-
