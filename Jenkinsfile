@@ -28,7 +28,6 @@ spec:
 '''
         }
     }
-
  
     stages {
         stage('Smoke Test') {
