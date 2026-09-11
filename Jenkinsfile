@@ -28,14 +28,14 @@ spec:
     }
  
     stages {
-       stage('Smoke Test') {
+        stage('Build and Push') {
             steps {
                 container('kaniko') {
                     sh '''
                         /kaniko/executor \
                           --context="${WORKSPACE}" \
                           --dockerfile="${WORKSPACE}/Dockerfile" \
-                          --destination=raycojp/flask-app:smoke-test
+                          --destination=raycojp/flask-app:v1-mweh
                     '''
                 }
             }
