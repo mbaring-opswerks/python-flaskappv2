@@ -107,9 +107,9 @@ EOF
                             export GIT_ASKPASS=/tmp/git-askpass.sh
                             export GIT_TERMINAL_PROMPT=0
 
-                            git clone https://${GIT_USER}:${GIT_PASS}@github.com/raycoJp/deployment-config.git deployment-config
+                            git clone https://${GIT_USER}:${GIT_PASS}@github.com/mbaring-opswerks/deployment-configv2.git deployment-configv2
 
-                            cd deployment-config
+                            cd deployment-configv2
 
                             # Targets '- image: raycojp/flask-app:<TAG>' while preserving indentations
                             sed -i "s|- image: ${DOCKER_IMAGE}:.*|- image: ${DOCKER_IMAGE}:${IMAGE_TAG}|" "${DEPLOYMENT_FILE}"
