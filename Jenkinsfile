@@ -90,7 +90,7 @@ spec:
                             passwordVariable: 'GIT_PASSWORD'
                         )
                     ]) {
-                        sh '''
+                        sh """
                             set -e
                             set +x
 
@@ -134,7 +134,7 @@ EOF
                             git push origin main
 
                             rm -f /tmp/git-askpass.sh
-                        '''
+                        """
                     }
                 }
             }
