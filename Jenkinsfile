@@ -8,6 +8,7 @@ metadata:
   namespace: devops-tools
 spec:
   containers:
+
   - name: kaniko
     image: gcr.io/kaniko-project/executor:debug
     command:
@@ -17,6 +18,13 @@ spec:
     volumeMounts:
     - name: docker-config
       mountPath: /kaniko/.docker
+
+  - name: git
+    image: alpine/git
+    command:
+    - sleep
+    args:
+    - 99d
 
   volumes:
   - name: docker-config
@@ -31,6 +39,10 @@ spec:
 
     environment {
         DOCKER_IMAGE = 'raycojp/flask-app'
+
+        DEPLOYMENT_REPO = 'https://github.com/raycoJp/deployment-config.git'
+
+        DEPLOYMENT_FILE = 'app/flask-app/deployment.yaml'
     }
 
     stages {
@@ -67,15 +79,73 @@ spec:
                 }
             }
         }
+
+        stage('Update deployment-config') {
+            steps {
+                container('git') {
+                    withCredentials([
+                        usernamePassword(
+                            credentialsId: '0d98625f-c43a-48de-a423-263930723728',
+                            usernameVariable: 'GIT_USERNAME',
+                            passwordVariable: 'GIT_PASSWORD'
+                        )
+                    ]) {
+                        sh '''
+                            set -e
+                            set +x
+
+                            cat > /tmp/git-askpass.sh <<'EOF'
+#!/bin/sh
+case "$1" in
+    *Username*) echo "$GIT_USERNAME" ;;
+    *Password*) echo "$GIT_PASSWORD" ;;
+esac
+EOF
+
+                            chmod 700 /tmp/git-askpass.sh
+
+                            export GIT_ASKPASS=/tmp/git-askpass.sh
+                            export GIT_TERMINAL_PROMPT=0
+
+                            git clone "${DEPLOYMENT_REPO}" deployment-config
+
+                            cd deployment-config
+
+                            sed -i "s|image: raycoJp/flask-app:.*|image: raycoJp/flask-app:${IMAGE_TAG}|" \
+                                "${DEPLOYMENT_FILE}"
+
+                            git config user.name "Jenkins"
+                            git config user.email "jenkins@localhost"
+
+                            echo "Updated deployment configuration:"
+                            git diff -- "${DEPLOYMENT_FILE}"
+
+                            git add "${DEPLOYMENT_FILE}"
+
+                            git commit \
+                                -m "Update flask-app image to ${IMAGE_TAG}"
+
+                            git push origin main
+
+                            rm -f /tmp/git-askpass.sh
+                        '''
+                    }
+                }
+            }
+        }
     }
 
     post {
         success {
-            echo "Image pushed: ${DOCKER_IMAGE}:${IMAGE_TAG}"
+            echo "CI completed successfully."
+            echo "Image: ${DOCKER_IMAGE}:${IMAGE_TAG}"
+            echo "deployment-config updated successfully."
+            echo "CI -> CD handoff complete. Flux can now reconcile the change."
         }
 
         failure {
             echo "Pipeline failed."
+            echo "No later stages were executed after the failure."
         }
     }
 }
