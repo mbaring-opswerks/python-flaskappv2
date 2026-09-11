@@ -40,7 +40,7 @@ spec:
     environment {
         DOCKER_IMAGE = 'raycojp/flask-app'
 
-        DEPLOYMENT_REPO = 'github.com/raycoJp/deployment-config.git'
+        DEPLOYMENT_REPO = 'https://github.com/mbaring-opswerks/python-flaskappv2.git'
 
         DEPLOYMENT_FILE = 'apps/flask-app/deployment.yaml'
     }
